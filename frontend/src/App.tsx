@@ -1,122 +1,264 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react";
+import type { Merchant, DashboardResponse } from "./api/types";
+import { fetchMerchants, fetchDashboard } from "./api/client";
+import { Dashboard } from "./components/Dashboard";
 
-function App() {
-  const [count, setCount] = useState(0)
+type TabKey = "dashboard" | "assistant" | "verify" | "cases" | "report";
+
+export default function App() {
+  const [merchants, setMerchants] = useState<Merchant[]>([]);
+  const [selectedMerchantId, setSelectedMerchantId] = useState<number | null>(null);
+  const [activeTab, setActiveTab] = useState<TabKey>("dashboard");
+
+  const [dashboardData, setDashboardData] = useState<DashboardResponse | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Load merchants on initial mount
+  useEffect(() => {
+    let isMounted = true;
+    fetchMerchants()
+      .then((data) => {
+        if (!isMounted) return;
+        setMerchants(data);
+        if (data.length > 0) {
+          setSelectedMerchantId(data[0].id);
+        }
+      })
+      .catch((err) => {
+        if (!isMounted) return;
+        setError(err.message || "Could not connect to backend server.");
+        setIsLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // Fetch dashboard data whenever selectedMerchantId changes
+  const loadDashboard = (merchantId: number) => {
+    setIsLoading(true);
+    setError(null);
+    fetchDashboard(merchantId)
+      .then((res) => {
+        setDashboardData(res);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        setError(err.message || "Failed to load dashboard data.");
+        setIsLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    if (selectedMerchantId !== null) {
+      loadDashboard(selectedMerchantId);
+    }
+  }, [selectedMerchantId]);
+
+  const handleMerchantChange = (newId: number) => {
+    setSelectedMerchantId(newId);
+  };
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+    <div className="app-container">
+      {/* Top Header */}
+      <header className="app-header">
+        <div className="brand">
+          <div className="brand-icon">V</div>
+          <div className="brand-name">
+            Vyapaar<span>AI</span>
+          </div>
         </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
+
+        <div className="header-right">
+          <div className="merchant-select-wrapper">
+            <span className="merchant-select-label">Merchant:</span>
+            <select
+              className="merchant-select"
+              value={selectedMerchantId ?? ""}
+              onChange={(e) => handleMerchantChange(Number(e.target.value))}
+              disabled={merchants.length === 0}
+            >
+              {merchants.map((m) => (
+                <option key={m.id} value={m.id}>
+                  {m.name} ({m.business_type})
+                </option>
+              ))}
+            </select>
+          </div>
+          <span className="demo-badge">Demo data (synthetic)</span>
         </div>
+      </header>
+
+      {/* Main Body with Sidebar + View */}
+      <div className="app-body">
+        {/* Desktop Sidebar */}
+        <aside className="sidebar">
+          <button
+            className={`nav-item ${activeTab === "dashboard" ? "active" : ""}`}
+            onClick={() => setActiveTab("dashboard")}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <rect x="3" y="3" width="7" height="9" rx="1" />
+              <rect x="14" y="3" width="7" height="5" rx="1" />
+              <rect x="14" y="12" width="7" height="9" rx="1" />
+              <rect x="3" y="16" width="7" height="5" rx="1" />
+            </svg>
+            Dashboard
+          </button>
+
+          <button
+            className={`nav-item ${activeTab === "assistant" ? "active" : ""}`}
+            onClick={() => setActiveTab("assistant")}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            </svg>
+            Assistant
+          </button>
+
+          <button
+            className={`nav-item ${activeTab === "verify" ? "active" : ""}`}
+            onClick={() => setActiveTab("verify")}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              <path d="m9 12 2 2 4-4" />
+            </svg>
+            Verify
+          </button>
+
+          <button
+            className={`nav-item ${activeTab === "cases" ? "active" : ""}`}
+            onClick={() => setActiveTab("cases")}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <line x1="16" y1="13" x2="8" y2="13" />
+              <line x1="16" y1="17" x2="8" y2="17" />
+              <polyline points="10 9 9 9 8 9" />
+            </svg>
+            Cases
+          </button>
+
+          <button
+            className={`nav-item ${activeTab === "report" ? "active" : ""}`}
+            onClick={() => setActiveTab("report")}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M21.21 15.89A10 10 0 1 1 8 2.83" />
+              <path d="M22 12A10 10 0 0 0 12 2v10z" />
+            </svg>
+            Report
+          </button>
+        </aside>
+
+        {/* Content View */}
+        <main className="main-content">
+          {isLoading ? (
+            <div className="state-container">
+              <div className="state-title">Loading digital collections...</div>
+              <div className="state-text">Fetching transaction ledger data for this merchant.</div>
+            </div>
+          ) : error ? (
+            <div className="state-container">
+              <div className="state-title" style={{ color: "var(--color-danger)" }}>
+                Unable to load data
+              </div>
+              <div className="state-text">{error}</div>
+              {selectedMerchantId !== null && (
+                <button
+                  className="btn-retry"
+                  onClick={() => loadDashboard(selectedMerchantId)}
+                >
+                  Retry
+                </button>
+              )}
+            </div>
+          ) : activeTab === "dashboard" ? (
+            dashboardData ? (
+              <Dashboard data={dashboardData} />
+            ) : (
+              <div className="state-container">
+                <div className="state-title">No data available</div>
+                <div className="state-text">There are no records for this merchant.</div>
+              </div>
+            )
+          ) : (
+            /* Placeholder for remaining tabs */
+            <div className="placeholder-card">
+              <h2 style={{ fontSize: "1.2rem", marginBottom: "0.5rem", color: "var(--color-navy)" }}>
+                {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Feature
+              </h2>
+              <p style={{ fontSize: "0.9rem" }}>
+                This screen will be activated in the next development layer.
+              </p>
+            </div>
+          )}
+        </main>
+      </div>
+
+      {/* Mobile Bottom Navigation */}
+      <nav className="bottom-nav">
         <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
+          className={`bottom-nav-item ${activeTab === "dashboard" ? "active" : ""}`}
+          onClick={() => setActiveTab("dashboard")}
         >
-          Count is {count}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <rect x="3" y="3" width="7" height="9" rx="1" />
+            <rect x="14" y="3" width="7" height="5" rx="1" />
+            <rect x="14" y="12" width="7" height="9" rx="1" />
+            <rect x="3" y="16" width="7" height="5" rx="1" />
+          </svg>
+          Dashboard
         </button>
-      </section>
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
+        <button
+          className={`bottom-nav-item ${activeTab === "assistant" ? "active" : ""}`}
+          onClick={() => setActiveTab("assistant")}
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
           </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+          Assistant
+        </button>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+        <button
+          className={`bottom-nav-item ${activeTab === "verify" ? "active" : ""}`}
+          onClick={() => setActiveTab("verify")}
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            <path d="m9 12 2 2 4-4" />
+          </svg>
+          Verify
+        </button>
+
+        <button
+          className={`bottom-nav-item ${activeTab === "cases" ? "active" : ""}`}
+          onClick={() => setActiveTab("cases")}
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+          </svg>
+          Cases
+        </button>
+
+        <button
+          className={`bottom-nav-item ${activeTab === "report" ? "active" : ""}`}
+          onClick={() => setActiveTab("report")}
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M21.21 15.89A10 10 0 1 1 8 2.83" />
+            <path d="M22 12A10 10 0 0 0 12 2v10z" />
+          </svg>
+          Report
+        </button>
+      </nav>
+    </div>
+  );
 }
-
-export default App
