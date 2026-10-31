@@ -1,0 +1,78 @@
+{
+  "01_match.png": {
+    "expected_outcome": "VERIFIED",
+    "utr": "100000000011",
+    "amount_paise": 12000,
+    "description": "real SUCCESS row, correct amount"
+  },
+  "02_wrong_amount.png": {
+    "expected_outcome": "MISMATCH",
+    "utr": "100000001245",
+    "amount_paise": 54000,
+    "description": "real UTR, amount + \u20b9500"
+  },
+  "03_unknown_utr.png": {
+    "expected_outcome": "UNVERIFIED",
+    "utr": "223005401501",
+    "amount_paise": 5000,
+    "description": "random 12-digit UTR not in ledger"
+  },
+  "04_pending.png": {
+    "expected_outcome": "UNVERIFIED",
+    "utr": "100000000001",
+    "amount_paise": 2000,
+    "description": "UTR of a PENDING row"
+  },
+  "05_blur_rotate.png": {
+    "expected_outcome": "UNVERIFIED",
+    "utr": "100000000011",
+    "amount_paise": 12000,
+    "description": "real SUCCESS row, blurred + rotated 3\u00b0",
+    "acceptable_outcomes": [
+      "VERIFIED",
+      "UNVERIFIED"
+    ]
+  },
+  "06_injection.png": {
+    "expected_outcome": "UNVERIFIED",
+    "utr": "911856239313",
+    "amount_paise": 10000,
+    "description": "unknown UTR plus injection text"
+  },
+  "07_failed_row.png": {
+    "expected_outcome": "MISMATCH",
+    "utr": "100000000025",
+    "amount_paise": 1000,
+    "description": "customer screenshot shows success but ledger recorded FAILED"
+  },
+  "08_refunded_row.png": {
+    "expected_outcome": "MISMATCH",
+    "utr": "100000000016",
+    "amount_paise": 2000,
+    "description": "customer screenshot shows payment but ledger recorded REFUNDED"
+  },
+  "09_wrong_recipient.png": {
+    "expected_outcome": "MISMATCH",
+    "utr": "100000000011",
+    "amount_paise": 12000,
+    "description": "paid to different business name (tampered recipient)"
+  },
+  "10_merchant2_cross_isolation.png": {
+    "expected_outcome": "UNVERIFIED",
+    "utr": "200000000019",
+    "amount_paise": 53100,
+    "description": "valid UTR belonging to Merchant 2 uploaded to Merchant 1"
+  },
+  "11_missing_utr.png": {
+    "expected_outcome": "UNVERIFIED",
+    "utr": null,
+    "amount_paise": 4000,
+    "description": "screenshot with missing or cropped UTR"
+  },
+  "12_alt_timestamp.png": {
+    "expected_outcome": "VERIFIED",
+    "utr": "100000000011",
+    "amount_paise": 12000,
+    "description": "alternative date format (12 Mar 2025, 06:42 PM)"
+  }
+}

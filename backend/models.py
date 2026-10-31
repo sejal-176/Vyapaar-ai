@@ -32,6 +32,7 @@ class Merchant(Base):
     submissions = relationship("Submission", back_populates="merchant")
     cases = relationship("Case", back_populates="merchant")
     ingestion_reports = relationship("IngestionReport", back_populates="merchant")
+    sms_checks = relationship("SMSCheck", back_populates="merchant")
 
 
 class Transaction(Base):
@@ -106,4 +107,18 @@ class IngestionReport(Base):
     created_at = Column(DateTime, default=utc_now, nullable=False)
 
     merchant = relationship("Merchant", back_populates="ingestion_reports")
+
+
+class SMSCheck(Base):
+    __tablename__ = "sms_checks"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    merchant_id = Column(Integer, ForeignKey("merchants.id"), nullable=False)
+    text_hash = Column(String(64), nullable=False)  # SHA-256 of message text
+    outcome = Column(String(32), nullable=False)  # VERIFIED, UNVERIFIED, MISMATCH, NOT_CHECKABLE
+    signal_categories = Column(Text, nullable=False)  # JSON list of category strings
+    created_at = Column(DateTime, default=utc_now, nullable=False)
+
+    merchant = relationship("Merchant", back_populates="sms_checks")
+
 

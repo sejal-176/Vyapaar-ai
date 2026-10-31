@@ -9,6 +9,7 @@ from backend.api.verify import router as verify_router
 from backend.api.agent import router as agent_router
 from backend.api.cases import router as cases_router
 from backend.api.report import router as report_router
+from backend.api.scam import router as scam_router
 
 
 @asynccontextmanager
@@ -39,6 +40,7 @@ app.include_router(verify_router)
 app.include_router(agent_router)
 app.include_router(cases_router)
 app.include_router(report_router)
+app.include_router(scam_router)
 
 
 @app.get("/")

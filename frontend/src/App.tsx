@@ -6,8 +6,9 @@ import { Verify } from "./components/Verify";
 import { Assistant } from "./components/Assistant";
 import { Cases } from "./components/Cases";
 import { Report } from "./components/Report";
+import { MessageCheck } from "./components/MessageCheck";
 
-type TabKey = "dashboard" | "assistant" | "verify" | "cases" | "report";
+type TabKey = "dashboard" | "assistant" | "verify" | "cases" | "report" | "scam";
 
 export default function App() {
   const [merchants, setMerchants] = useState<Merchant[]>([]);
@@ -158,6 +159,17 @@ export default function App() {
             </svg>
             Report
           </button>
+
+          <button
+            className={`nav-item ${activeTab === "scam" ? "active" : ""}`}
+            onClick={() => setActiveTab("scam")}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+              <path d="M12 9v2m0 4h.01" />
+            </svg>
+            Message Check
+          </button>
         </aside>
 
         {/* Content View */}
@@ -227,6 +239,18 @@ export default function App() {
                 <div className="state-title">Please select a merchant</div>
               </div>
             )
+          ) : activeTab === "scam" ? (
+            selectedMerchantId !== null ? (
+              <MessageCheck
+                merchantId={selectedMerchantId}
+                merchants={merchants}
+                onNavigateToCases={() => setActiveTab("cases")}
+              />
+            ) : (
+              <div className="state-container">
+                <div className="state-title">Please select a merchant</div>
+              </div>
+            )
           ) : null}
         </main>
       </div>
@@ -287,6 +311,17 @@ export default function App() {
             <path d="M22 12A10 10 0 0 0 12 2v10z" />
           </svg>
           Report
+        </button>
+
+        <button
+          className={`bottom-nav-item ${activeTab === "scam" ? "active" : ""}`}
+          onClick={() => setActiveTab("scam")}
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            <path d="M12 9v2m0 4h.01" />
+          </svg>
+          Check
         </button>
       </nav>
     </div>

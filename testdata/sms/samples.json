@@ -1,0 +1,84 @@
+[
+  {
+    "id": "sms_01_verified",
+    "text": "Dear Merchant, Rs 40.00 received in your account via UPI. UTR 100000001245. Paytm Payments Bank.",
+    "expected_outcome": "VERIFIED",
+    "expected_signal_categories": [],
+    "note": "Genuine credit matching real seeded SUCCESS transaction for Merchant 1"
+  },
+  {
+    "id": "sms_02_candidate_match",
+    "text": "Payment of Rs 30.00 received from customer via UPI on 30-10-2026 11:00:00.",
+    "expected_outcome": "UNVERIFIED",
+    "expected_signal_categories": [],
+    "note": "Genuine credit without UTR matching exactly one candidate payment by amount and date"
+  },
+  {
+    "id": "sms_03_wrong_amount",
+    "text": "Rs 500.00 credited to your account via UPI. UTR 100000001245.",
+    "expected_outcome": "MISMATCH",
+    "expected_signal_categories": [],
+    "note": "Real UTR 100000001245 exists but actual ledger amount is Rs 40.00 instead of Rs 500.00"
+  },
+  {
+    "id": "sms_04_failed_payment",
+    "text": "Payment of Rs 10.00 credited successfully. UTR 100000000025.",
+    "expected_outcome": "MISMATCH",
+    "expected_signal_categories": [],
+    "note": "Real UTR 100000000025 exists in records but status is FAILED"
+  },
+  {
+    "id": "sms_05_refund_as_credit",
+    "text": "Credited Rs 20.00 to your A/c. UTR 100000000016.",
+    "expected_outcome": "MISMATCH",
+    "expected_signal_categories": [],
+    "note": "Real UTR 100000000016 exists in records but transaction type is REFUND"
+  },
+  {
+    "id": "sms_06_unknown_utr",
+    "text": "Rs 150.00 received from customer via UPI. Ref No 999888777666.",
+    "expected_outcome": "UNVERIFIED",
+    "expected_signal_categories": [],
+    "note": "UTR 999888777666 does not exist in ledger"
+  },
+  {
+    "id": "sms_07_otp_scam_link",
+    "text": "Dear user, Rs 2,500 pending credit. Share your OTP to accept payment or visit http://bit.ly/paytm-claim.",
+    "expected_outcome": "UNVERIFIED",
+    "expected_signal_categories": [
+      "secrets",
+      "bad_link"
+    ],
+    "note": "Lures user to share OTP or open shortened link"
+  },
+  {
+    "id": "sms_08_pin_trick",
+    "text": "Customer has sent Rs 1,000. Enter your UPI PIN to receive money in your bank account.",
+    "expected_outcome": "UNVERIFIED",
+    "expected_signal_categories": [
+      "pin_trick",
+      "secrets"
+    ],
+    "note": "Trick to get merchant to enter UPI PIN under false claim of receiving money"
+  },
+  {
+    "id": "sms_09_kyc_scare",
+    "text": "Urgent! Your Paytm KYC expired. Your account will be blocked within 24 hours. Update KYC immediately at http://192.168.1.50/kyc.",
+    "expected_outcome": "NOT_CHECKABLE",
+    "expected_signal_categories": [
+      "kyc_scare",
+      "urgency",
+      "bad_link"
+    ],
+    "note": "Urgent threat of account block with raw IP link to fake KYC update"
+  },
+  {
+    "id": "sms_10_refund_trick",
+    "text": "Bhaiya galti se Rs 500 aapke QR code par bhej diya. Sent by mistake, please return the money.",
+    "expected_outcome": "UNVERIFIED",
+    "expected_signal_categories": [
+      "refund_trick"
+    ],
+    "note": "Social engineering plea claiming accidental payment"
+  }
+]

@@ -1510,3 +1510,330 @@ button, input, select {
   white-space: pre-wrap;
   word-break: break-word;
 }
+
+/* ============================================================================
+   Message Check (SMS Scam Detector) Styles
+   ============================================================================ */
+.scam-screen {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.scam-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.scam-notice {
+  font-size: 0.85rem;
+  color: var(--color-muted);
+  background-color: var(--color-bg);
+  border-left: 3px solid var(--color-cyan);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.scam-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.scam-input-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.char-counter {
+  font-size: 0.8rem;
+  color: var(--color-muted);
+}
+
+.char-counter.warning {
+  color: var(--color-danger);
+  font-weight: 600;
+}
+
+.scam-textarea {
+  width: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  resize: vertical;
+  background-color: #FAFAFA;
+}
+
+.scam-textarea:focus {
+  outline: none;
+  border-color: var(--color-cyan);
+  background-color: #FFFFFF;
+}
+
+.scam-button-row {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.scam-results-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.scam-banner {
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  border: 1px solid transparent;
+}
+
+.scam-banner-icon {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.scam-banner.verified {
+  background-color: var(--color-success-bg);
+  border-color: #A3D9A5;
+  color: #1B5E20;
+}
+
+.scam-banner.verified .scam-banner-icon {
+  background-color: #2E7D32;
+  color: #FFFFFF;
+}
+
+.scam-banner.unverified {
+  background-color: var(--color-amber-bg);
+  border-color: #FFE082;
+  color: #795548;
+}
+
+.scam-banner.unverified .scam-banner-icon {
+  background-color: #F57C00;
+  color: #FFFFFF;
+}
+
+.scam-banner.mismatch {
+  background-color: var(--color-danger-bg);
+  border-color: #FFCDD2;
+  color: #B71C1C;
+}
+
+.scam-banner.mismatch .scam-banner-icon {
+  background-color: #C62828;
+  color: #FFFFFF;
+}
+
+.scam-banner.not_checkable {
+  background-color: #ECEFF1;
+  border-color: #CFD8DC;
+  color: #37474F;
+}
+
+.scam-banner.not_checkable .scam-banner-icon {
+  background-color: #78909C;
+  color: #FFFFFF;
+}
+
+.scam-banner-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.scam-banner-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.scam-banner-reason {
+  font-size: 0.9rem;
+}
+
+.scam-table-wrapper {
+  overflow-x: auto;
+  margin-top: 0.75rem;
+}
+
+.scam-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.scam-table th, .scam-table td {
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+}
+
+.scam-table th {
+  background-color: #F8FAFC;
+  font-weight: 600;
+  color: var(--color-muted);
+}
+
+.scam-table tr:hover {
+  background-color: #F8FAFC;
+}
+
+.evidence-block {
+  margin-top: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background-color: #F8FAFC;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+}
+
+.evidence-list {
+  padding-left: 1.25rem;
+  margin-top: 0.25rem;
+}
+
+.candidates-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.candidate-card {
+  padding: 0.6rem 0.75rem;
+  background-color: #F8FAFC;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.candidate-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+}
+
+.candidate-meta {
+  display: flex;
+  gap: 0.75rem;
+  font-size: 0.8rem;
+  color: var(--color-muted);
+}
+
+.signals-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.signals-badge {
+  font-size: 0.75rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  font-weight: 600;
+}
+
+.signals-badge.clean {
+  background-color: var(--color-success-bg);
+  color: var(--color-success);
+}
+
+.signals-badge.warning {
+  background-color: var(--color-danger-bg);
+  color: var(--color-danger);
+}
+
+.signals-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.signal-item {
+  border-left: 3px solid var(--color-danger);
+  background-color: #FFF5F5;
+  padding: 0.6rem 0.75rem;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.signal-cat-badge {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  background-color: #FFE0E0;
+  color: var(--color-danger);
+  padding: 0.1rem 0.4rem;
+  border-radius: var(--radius-sm);
+}
+
+.signal-details {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+}
+
+.signal-match-phrase {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.signal-mark {
+  background-color: #FED7D7;
+  padding: 0 0.2rem;
+  border-radius: 2px;
+}
+
+.signal-explanation {
+  color: var(--color-muted);
+  font-size: 0.85rem;
+}
+
+.advice-disclaimer-card {
+  background-color: #F8FAFC;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.advice-line {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-navy);
+}
+
+.disclaimer-line {
+  font-size: 0.78rem;
+  color: var(--color-muted);
+  line-height: 1.4;
+}
+
