@@ -7,6 +7,8 @@ from backend.db import Base, engine
 from backend.api.dashboard import router as dashboard_router
 from backend.api.verify import router as verify_router
 from backend.api.agent import router as agent_router
+from backend.api.cases import router as cases_router
+from backend.api.report import router as report_router
 
 
 @asynccontextmanager
@@ -35,6 +37,8 @@ app.add_middleware(
 app.include_router(dashboard_router)
 app.include_router(verify_router)
 app.include_router(agent_router)
+app.include_router(cases_router)
+app.include_router(report_router)
 
 
 @app.get("/")

@@ -4,6 +4,8 @@ import { fetchMerchants, fetchDashboard } from "./api/client";
 import { Dashboard } from "./components/Dashboard";
 import { Verify } from "./components/Verify";
 import { Assistant } from "./components/Assistant";
+import { Cases } from "./components/Cases";
+import { Report } from "./components/Report";
 
 type TabKey = "dashboard" | "assistant" | "verify" | "cases" | "report";
 
@@ -199,23 +201,33 @@ export default function App() {
             )
           ) : activeTab === "verify" ? (
             selectedMerchantId !== null ? (
-              <Verify merchantId={selectedMerchantId} merchants={merchants} />
+              <Verify
+                merchantId={selectedMerchantId}
+                merchants={merchants}
+                onNavigateToCases={() => setActiveTab("cases")}
+              />
             ) : (
               <div className="state-container">
                 <div className="state-title">Please select a merchant</div>
               </div>
             )
-          ) : (
-            /* Placeholder for remaining tabs (assistant, cases, report) */
-            <div className="placeholder-card">
-              <h2 style={{ fontSize: "1.2rem", marginBottom: "0.5rem", color: "var(--color-navy)" }}>
-                {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Feature
-              </h2>
-              <p style={{ fontSize: "0.9rem" }}>
-                This screen will be activated in the next development layer.
-              </p>
-            </div>
-          )}
+          ) : activeTab === "cases" ? (
+            selectedMerchantId !== null ? (
+              <Cases merchantId={selectedMerchantId} merchants={merchants} />
+            ) : (
+              <div className="state-container">
+                <div className="state-title">Please select a merchant</div>
+              </div>
+            )
+          ) : activeTab === "report" ? (
+            selectedMerchantId !== null ? (
+              <Report merchantId={selectedMerchantId} merchants={merchants} />
+            ) : (
+              <div className="state-container">
+                <div className="state-title">Please select a merchant</div>
+              </div>
+            )
+          ) : null}
         </main>
       </div>
 
