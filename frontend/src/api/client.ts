@@ -9,6 +9,11 @@ import type {
   UpdateCasePayload,
   ReportResponse,
   ScamCheckResponse,
+  LapsingResponse,
+  CustomerChangeResponse,
+  InventoryResponse,
+  GuardrailResult,
+  OutreachItem,
 } from "./types";
 
 export async function fetchMerchants(): Promise<Merchant[]> {
@@ -198,5 +203,159 @@ export async function checkSmsMessage(
     throw new Error(errorDetail);
   }
 
+  return res.json();
+}
+
+// ============================================================================
+// Growth Insights API Calls
+// ============================================================================
+
+export async function getLapsingCustomers(): Promise<LapsingResponse> {
+  const res = await fetch(`${API_BASE_URL}/api/growth/customers/lapsing`);
+  if (!res.ok) {
+    let errorDetail = res.statusText;
+    try {
+      const errJson = await res.json();
+      if (errJson.detail) errorDetail = errJson.detail;
+    } catch {
+      // fallback
+    }
+    throw new Error(errorDetail);
+  }
+  return res.json();
+}
+
+export async function getCustomerChange(customerId: number): Promise<CustomerChangeResponse> {
+  const res = await fetch(`${API_BASE_URL}/api/growth/customers/${customerId}/change`);
+  if (!res.ok) {
+    let errorDetail = res.statusText;
+    try {
+      const errJson = await res.json();
+      if (errJson.detail) errorDetail = errJson.detail;
+    } catch {
+      // fallback
+    }
+    throw new Error(errorDetail);
+  }
+  return res.json();
+}
+
+export async function getInventoryInsights(): Promise<InventoryResponse> {
+  const res = await fetch(`${API_BASE_URL}/api/growth/inventory`);
+  if (!res.ok) {
+    let errorDetail = res.statusText;
+    try {
+      const errJson = await res.json();
+      if (errJson.detail) errorDetail = errJson.detail;
+    } catch {
+      // fallback
+    }
+    throw new Error(errorDetail);
+  }
+  return res.json();
+}
+
+export async function previewTemplate(
+  offerType: string,
+  language: string,
+  offerPct: number = 0
+): Promise<{ message_text: string }> {
+  const res = await fetch(`${API_BASE_URL}/api/growth/outreach/template-preview`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ offer_type: offerType, language, offer_pct: offerPct }),
+  });
+  if (!res.ok) {
+    let errorDetail = res.statusText;
+    try {
+      const errJson = await res.json();
+      if (errJson.detail) errorDetail = errJson.detail;
+    } catch {
+      // fallback
+    }
+    throw new Error(errorDetail);
+  }
+  return res.json();
+}
+
+export async function checkGuardrail(customerId: number, offerPct: number): Promise<GuardrailResult> {
+  const res = await fetch(`${API_BASE_URL}/api/growth/outreach/guardrail-check`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ customer_id: customerId, offer_pct: offerPct }),
+  });
+  if (!res.ok) {
+    let errorDetail = res.statusText;
+    try {
+      const errJson = await res.json();
+      if (errJson.detail) errorDetail = errJson.detail;
+    } catch {
+      // fallback
+    }
+    throw new Error(errorDetail);
+  }
+  return res.json();
+}
+
+export async function createDraft(payload: {
+  customer_id: number;
+  language: string;
+  offer_type: string;
+  offer_pct: number;
+  custom_text?: string;
+}): Promise<OutreachItem> {
+  const res = await fetch(`${API_BASE_URL}/api/growth/outreach/draft`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    let errorDetail = res.statusText;
+    try {
+      const errJson = await res.json();
+      if (errJson.detail) errorDetail = errJson.detail;
+    } catch {
+      // fallback
+    }
+    throw new Error(errorDetail);
+  }
+  return res.json();
+}
+
+export async function listOutreach(): Promise<OutreachItem[]> {
+  const res = await fetch(`${API_BASE_URL}/api/growth/outreach`);
+  if (!res.ok) {
+    let errorDetail = res.statusText;
+    try {
+      const errJson = await res.json();
+      if (errJson.detail) errorDetail = errJson.detail;
+    } catch {
+      // fallback
+    }
+    throw new Error(errorDetail);
+  }
+  return res.json();
+}
+
+export async function updateOutreach(
+  outreachId: number,
+  action: string,
+  messageText?: string
+): Promise<OutreachItem> {
+  const res = await fetch(`${API_BASE_URL}/api/growth/outreach/${outreachId}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ action, message_text: messageText }),
+  });
+  if (!res.ok) {
+    let errorDetail = res.statusText;
+    try {
+      const errJson = await res.json();
+      if (errJson.detail) errorDetail = errJson.detail;
+    } catch {
+      // fallback
+    }
+    throw new Error(errorDetail);
+  }
   return res.json();
 }

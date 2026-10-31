@@ -201,4 +201,133 @@ export interface ScamCheckResponse {
   disclaimer: string;
 }
 
+// ============================================================================
+// Growth Insights Preview Types
+// ============================================================================
+
+export interface LapsingCustomer {
+  id: number;
+  payer_token: string;
+  consent_status: "NONE" | "OPTED_IN" | string;
+  usual_gap_days: number;
+  days_since_last_visit: number;
+  last_visit_date: string;
+  visits_before: number;
+  visits_now: number;
+  spend_before_inr: string;
+  spend_now_inr: string;
+  spend_per_visit_before_inr: string;
+  spend_per_visit_now_inr: string;
+  main_driver: "fewer_visits" | "smaller_basket" | "mixed" | string;
+  driver_summary: string;
+}
+
+export interface ShrinkingCustomer {
+  customer_id: number;
+  payer_token: string;
+  consent_status: string;
+  visits_now: number;
+  spend_per_visit_before_inr: string;
+  spend_per_visit_now_inr: string;
+  drop_pct: number;
+  driver_summary: string;
+}
+
+export interface LapsingResponse {
+  named: LapsingCustomer[];
+  not_named_count: number;
+  reference_date: string | null;
+  how_we_measure: string;
+  shrinking: ShrinkingCustomer[];
+}
+
+export interface ProductChanged {
+  product_name: string;
+  before_avg: number;
+  now_avg: number;
+  change: number;
+}
+
+export interface CustomerChangeResponse {
+  customer_id: number;
+  payer_token: string;
+  consent_status: string;
+  reference_date: string;
+  visits_old: number;
+  visits_new: number;
+  spend_old_inr: string;
+  spend_new_inr: string;
+  spend_change_inr: string;
+  spend_per_visit_old_inr: string;
+  spend_per_visit_new_inr: string;
+  visits_effect_inr: string;
+  basket_effect_inr: string;
+  main_driver: string;
+  driver_summary: string;
+  products_changed: ProductChanged[];
+  worth_checking: string[];
+}
+
+export interface ProductInsight {
+  id: number;
+  name: string;
+  unit: string;
+  price_paise: number;
+  price_inr: string;
+  cost_price_paise: number | null;
+  cost_price_inr: string | null;
+  margin_per_unit_inr: string | null;
+  margin_pct: number | null;
+  stock_on_hand: number;
+  stock_updated_on: string;
+  velocity: number;
+  days_left: number | null;
+  status: "Low stock" | "OK" | "No recent units" | string;
+  units_last14: number;
+  units_prev14: number;
+  trend_pct: number | null;
+  explanation: string;
+}
+
+export interface SlowMover {
+  product_id: number;
+  product_name: string;
+  unit: string;
+  units_prev14: number;
+  units_last14: number;
+  drop_pct: number;
+  note: string;
+}
+
+export interface InventoryResponse {
+  products: ProductInsight[];
+  slow_movers: SlowMover[];
+  reference_date: string | null;
+  how_we_measure: string;
+  note: string;
+}
+
+export interface OutreachItem {
+  id: number;
+  customer_id: number;
+  payer_token: string;
+  status: "DRAFT" | "APPROVED" | "MARKED_SENT" | "DISMISSED" | string;
+  language: "en" | "hi" | "mr" | string;
+  offer_type: "NONE" | "LOYALTY_STAMP" | "PERCENT" | string;
+  offer_pct: number;
+  message_text: string;
+  evidence: Record<string, any>;
+  created_at: string;
+  approved_at: string | null;
+  marked_sent_at: string | null;
+}
+
+export interface GuardrailResult {
+  allowed: boolean;
+  reason: string;
+  margin_used: number;
+  margin_left: number;
+}
+
+
 

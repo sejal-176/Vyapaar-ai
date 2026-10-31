@@ -10,6 +10,7 @@ from backend.api.agent import router as agent_router
 from backend.api.cases import router as cases_router
 from backend.api.report import router as report_router
 from backend.api.scam import router as scam_router
+from backend.growth_demo import growth_router
 
 
 @asynccontextmanager
@@ -41,6 +42,7 @@ app.include_router(agent_router)
 app.include_router(cases_router)
 app.include_router(report_router)
 app.include_router(scam_router)
+app.include_router(growth_router)
 
 
 @app.get("/")

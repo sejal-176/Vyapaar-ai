@@ -7,8 +7,9 @@ import { Assistant } from "./components/Assistant";
 import { Cases } from "./components/Cases";
 import { Report } from "./components/Report";
 import { MessageCheck } from "./components/MessageCheck";
+import { GrowthInsights } from "./components/GrowthInsights";
 
-type TabKey = "dashboard" | "assistant" | "verify" | "cases" | "report" | "scam";
+type TabKey = "dashboard" | "assistant" | "verify" | "cases" | "report" | "scam" | "growth";
 
 export default function App() {
   const [merchants, setMerchants] = useState<Merchant[]>([]);
@@ -170,6 +171,18 @@ export default function App() {
             </svg>
             Message Check
           </button>
+
+          <button
+            className={`nav-item ${activeTab === "growth" ? "active" : ""}`}
+            onClick={() => setActiveTab("growth")}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M18 20V10" />
+              <path d="M12 20V4" />
+              <path d="M6 20v-6" />
+            </svg>
+            Growth Insights
+          </button>
         </aside>
 
         {/* Content View */}
@@ -251,6 +264,8 @@ export default function App() {
                 <div className="state-title">Please select a merchant</div>
               </div>
             )
+          ) : activeTab === "growth" ? (
+            <GrowthInsights />
           ) : null}
         </main>
       </div>
@@ -322,6 +337,18 @@ export default function App() {
             <path d="M12 9v2m0 4h.01" />
           </svg>
           Check
+        </button>
+
+        <button
+          className={`bottom-nav-item ${activeTab === "growth" ? "active" : ""}`}
+          onClick={() => setActiveTab("growth")}
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M18 20V10" />
+            <path d="M12 20V4" />
+            <path d="M6 20v-6" />
+          </svg>
+          Growth
         </button>
       </nav>
     </div>
