@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import type { Merchant, DashboardResponse } from "./api/types";
 import { fetchMerchants, fetchDashboard } from "./api/client";
 import { Dashboard } from "./components/Dashboard";
+import { Verify } from "./components/Verify";
 
 type TabKey = "dashboard" | "assistant" | "verify" | "cases" | "report";
 
@@ -158,28 +159,28 @@ export default function App() {
 
         {/* Content View */}
         <main className="main-content">
-          {isLoading ? (
-            <div className="state-container">
-              <div className="state-title">Loading digital collections...</div>
-              <div className="state-text">Fetching transaction ledger data for this merchant.</div>
-            </div>
-          ) : error ? (
-            <div className="state-container">
-              <div className="state-title" style={{ color: "var(--color-danger)" }}>
-                Unable to load data
+          {activeTab === "dashboard" ? (
+            isLoading ? (
+              <div className="state-container">
+                <div className="state-title">Loading digital collections...</div>
+                <div className="state-text">Fetching transaction ledger data for this merchant.</div>
               </div>
-              <div className="state-text">{error}</div>
-              {selectedMerchantId !== null && (
-                <button
-                  className="btn-retry"
-                  onClick={() => loadDashboard(selectedMerchantId)}
-                >
-                  Retry
-                </button>
-              )}
-            </div>
-          ) : activeTab === "dashboard" ? (
-            dashboardData ? (
+            ) : error ? (
+              <div className="state-container">
+                <div className="state-title" style={{ color: "var(--color-danger)" }}>
+                  Unable to load data
+                </div>
+                <div className="state-text">{error}</div>
+                {selectedMerchantId !== null && (
+                  <button
+                    className="btn-retry"
+                    onClick={() => loadDashboard(selectedMerchantId)}
+                  >
+                    Retry
+                  </button>
+                )}
+              </div>
+            ) : dashboardData ? (
               <Dashboard data={dashboardData} />
             ) : (
               <div className="state-container">
@@ -187,8 +188,16 @@ export default function App() {
                 <div className="state-text">There are no records for this merchant.</div>
               </div>
             )
+          ) : activeTab === "verify" ? (
+            selectedMerchantId !== null ? (
+              <Verify merchantId={selectedMerchantId} merchants={merchants} />
+            ) : (
+              <div className="state-container">
+                <div className="state-title">Please select a merchant</div>
+              </div>
+            )
           ) : (
-            /* Placeholder for remaining tabs */
+            /* Placeholder for remaining tabs (assistant, cases, report) */
             <div className="placeholder-card">
               <h2 style={{ fontSize: "1.2rem", marginBottom: "0.5rem", color: "var(--color-navy)" }}>
                 {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Feature
