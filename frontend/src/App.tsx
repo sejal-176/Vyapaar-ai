@@ -3,6 +3,7 @@ import type { Merchant, DashboardResponse } from "./api/types";
 import { fetchMerchants, fetchDashboard } from "./api/client";
 import { Dashboard } from "./components/Dashboard";
 import { Verify } from "./components/Verify";
+import { Assistant } from "./components/Assistant";
 
 type TabKey = "dashboard" | "assistant" | "verify" | "cases" | "report";
 
@@ -186,6 +187,14 @@ export default function App() {
               <div className="state-container">
                 <div className="state-title">No data available</div>
                 <div className="state-text">There are no records for this merchant.</div>
+              </div>
+            )
+          ) : activeTab === "assistant" ? (
+            selectedMerchantId !== null ? (
+              <Assistant merchantId={selectedMerchantId} merchants={merchants} />
+            ) : (
+              <div className="state-container">
+                <div className="state-title">Please select a merchant</div>
               </div>
             )
           ) : activeTab === "verify" ? (

@@ -10,7 +10,7 @@ load_dotenv(dotenv_path=env_path)
 
 LLM_API_KEY: str = os.getenv("LLM_API_KEY", "")
 LLM_BASE_URL: str = os.getenv("LLM_BASE_URL", "https://api.groq.com/openai/v1")
-LLM_MODEL: str = os.getenv("LLM_MODEL", "llama-3.3-70b-versatile")
+LLM_MODEL: str = os.getenv("LLM_MODEL", "openai/gpt-oss-120b")
 DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./vyapaar.db")
 TESSERACT_CMD: str = os.getenv("TESSERACT_CMD", r"C:\Program Files\Tesseract-OCR\tesseract.exe")
 
